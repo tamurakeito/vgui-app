@@ -1,0 +1,12 @@
+a {
+  transition: .2s;
+}
+/*vgui-commandタグのstyle設定*/
+vgui-command {
+  visibility: hidden;
+  position: absolute;
+  text-align: center;
+}
+vgui-command.visual {
+  visibility: visible;
+}
