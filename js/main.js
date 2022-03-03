@@ -14,25 +14,6 @@ for (var i = 0; i < objectElements.length; i++) {
   objectElements[i].innerHTML = element_content + '<vgui-command>' + String(i+1) +'</vgui-command>';
 }
 
-//vgui-commandタグのstyle設定
-/*
-var styleTag = document.createElement('style');
-styleTag.innerText = `
-    a {
-      transition: .2s;
-    }
-    vgui-command {
-      visibility: hidden;
-      position: absolute;
-      text-align: center;
-    }
-    vgui-command.visual {
-      visibility: visible;
-    }
-`;
-document.getElementsByTagName('head')[0].insertAdjacentElement('beforeend', styleTag);
-*/
-
 //モードの切り替えに使うボタンを作成している。本番では音声で切り替えるようにしたいので、サーバーサイドができてから実装。
 var inputButton = '<input type="button" value="ボタン" id="vguiButton";" style="position: fixed; bottom: 10px; right: 10px; z-index: 10;"/>';
 document.getElementsByTagName('body')[0].insertAdjacentHTML('beforeend', inputButton);
@@ -48,16 +29,25 @@ document.getElementById('vguiButton').onclick = function(){
 function changeColor(){
   //①
   var elementsBugie = document.getElementsByTagName('vgui-command');
-  for (var i = 0; i < objectElements.length; i++) {
+  for (var i = 0; i < elementsBugie.length; i++) {
     if (mode == 'default') {
-      objectElements[i].style.color = '#212121';
-      objectElements[i].style.backgroundColor = '#ffb6c1';
-      objectElements[i].style.transform = 'scale(0.9)';
+      //レイアウト崩れ防止
+      if(getComputedStyle(objectElements[i]).getPropertyValue('position') == 'absolute'){
+        objectElements[i].style.color = '#212121';
+        objectElements[i].style.backgroundColor = '#ffb6c1';
+        objectElements[i].style.transform = 'scale(0.9)';
+      }else{
+        objectElements[i].style.color = '#212121';
+        objectElements[i].style.backgroundColor = '#ffb6c1';
+        objectElements[i].style.transform = 'scale(0.9)';
+        objectElements[i].style.position = 'relative';
+      }
       elementsBugie[i].classList.add('visual');
     }else {
       objectElements[i].style.color = null;
       objectElements[i].style.backgroundColor = null;
       objectElements[i].style.transform = null;
+      objectElements[i].style.position = null;
       elementsBugie[i].classList.remove('visual');
     }
   }
@@ -66,5 +56,10 @@ function changeColor(){
     mode = 'visual';
   }else {
     mode = 'default';
+  }
+
+  //画面遷移，音声入力イベントが必要
+  function chagePage(number) {
+    location.href = objectElements[number-1].href;
   }
 }
